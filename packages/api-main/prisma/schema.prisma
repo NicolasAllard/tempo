@@ -13,3 +13,28 @@ datasource db {
   provider = "postgresql"
   url      = env("DATABASE_URL")
 }
+
+model User {
+  id           String   @id @default(cuid())
+  email        String   @unique
+  passwordHash String
+  createdAt    DateTime @default(now())
+  updatedAt    DateTime @updatedAt
+
+  boards Board[] // A user can have many boards
+}
+
+model Board {
+  id        String @id @default(cuid())
+  name      String
+  // The 'boardData' field will store the entire whiteboard as a JSON object
+  boardData Json?  @default("{}")
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  owner   User   @relation(fields: [ownerId], references: [id])
+  ownerId String
+
+  @@index([ownerId])
+}
