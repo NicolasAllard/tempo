@@ -1,0 +1,15 @@
+[package]
+name = "svc-brain"
+version = "0.1.0"
+edition = "2024"
+
+[dependencies]
+# The web framework for handling simple HTTP requests (like /compute/mindmap-layout)
+axum = "0.8.6"
+
+# The asynchronous runtime
+tokio = { version = "1", features = ["full"] }
+
+# For serializing and deserializing JSON data (the input and output of your computation)
+serde = { version = "1", features = ["derive"] }
+serde_json = "1"

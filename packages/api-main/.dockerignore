@@ -1,0 +1,7 @@
+# Ignore the local node_modules folder. We want to use the one
+# built *inside* the container.
+node_modules
+
+# Also ignore build artifacts and environment files
+dist
+.env

@@ -1,0 +1,38 @@
+# Stage 1: Build the 'svc-brain' binary
+FROM rustlang/rust:nightly-slim AS builder
+WORKDIR /app
+
+# Create a new, blank project with the correct name
+RUN cargo new svc-brain
+WORKDIR /app/svc-brain
+
+# Copy the dependency files
+COPY Cargo.toml Cargo.lock* ./
+
+# Build a blank version to cache dependencies
+RUN cargo build --release --locked --bin svc-brain
+
+# Copy the actual source code and rebuild
+COPY src ./src
+RUN cargo build --release --locked --bin svc-brain && \
+    ls -la /app/svc-brain/target/release/
+
+# Stage 2: Final, small image
+FROM debian:stable-slim
+WORKDIR /app
+
+# Install necessary system libraries and clean up
+RUN apt-get update && \
+    apt-get install -y --no-install-recommends ca-certificates && \
+    rm -rf /var/lib/apt/lists/*
+
+# Verify and copy the compiled binary
+COPY --from=builder /app/svc-brain/target/release/svc-brain /usr/local/bin/svc-brain
+RUN ls -la /usr/local/bin/svc-brain && \
+    chmod +x /usr/local/bin/svc-brain
+
+# Expose the port (8081 from our main.rs)
+EXPOSE 8081
+
+# Run the binary from PATH
+CMD ["svc-brain"]

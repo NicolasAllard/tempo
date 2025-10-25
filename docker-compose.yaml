@@ -1,0 +1,74 @@
+version: "3.9"
+
+services:
+  # Frontend (React + Vite)
+  frontend:
+    build:
+      context: ./packages/frontend
+      dockerfile: Dockerfile
+    ports:
+      - "5173:5173" # Vite dev server
+    volumes:
+      - ./packages/frontend:/app
+      - /app/node_modules # Isolate node_modules
+    networks:
+      - tempo_net
+
+  # Main API (Node + Fastify)
+  api-main:
+    build:
+      context: ./packages/api-main
+      dockerfile: Dockerfile
+    ports:
+      - "8000:8000"
+    volumes:
+      - ./packages/api-main:/app
+      - /app/node_modules
+    environment:
+      - DATABASE_URL=postgresql://user:password@db:5432/tempo
+      - SVC_BRAIN_URL=http://svc-brain:8081
+    depends_on:
+      - db
+    networks:
+      - tempo_net
+
+  # Real-Time "Engine" (Rust)
+  svc-engine:
+    build:
+      context: ./packages/svc-engine
+      dockerfile: Dockerfile.rust
+    ports:
+      - "8080:8080"
+    networks:
+      - tempo_net
+
+  # Compute "Brain" (Rust)
+  svc-brain:
+    build:
+      context: ./packages/svc-brain
+      dockerfile: Dockerfile.rust
+    ports:
+      - "8081:8081"
+    networks:
+      - tempo_net
+
+  # Database (PostgreSQL)
+  db:
+    image: postgres:15
+    ports:
+      - "5432:5432"
+    environment:
+      - POSTGRES_USER=user
+      - POSTGRES_PASSWORD=password
+      - POSTGRES_DB=tempo
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+    networks:
+      - tempo_net
+
+networks:
+  tempo_net:
+    driver: bridge
+
+volumes:
+  postgres_data:

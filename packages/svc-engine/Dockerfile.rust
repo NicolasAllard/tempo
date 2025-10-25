@@ -1,0 +1,38 @@
+# Stage 1: Build the 'svc-engine' binary
+FROM rustlang/rust:nightly-slim AS builder
+WORKDIR /app
+
+# Create a new, blank project with the correct name
+RUN cargo new svc-engine
+WORKDIR /app/svc-engine
+
+# Copy the dependency files
+COPY Cargo.toml Cargo.lock* ./
+
+# Build a blank version to cache dependencies
+RUN cargo build --release --locked --bin svc-engine
+
+# Copy the actual source code and rebuild
+COPY src ./src
+RUN cargo build --release --locked --bin svc-engine && \
+    ls -la /app/svc-engine/target/release/
+
+# Stage 2: Final, small image
+FROM debian:stable-slim
+WORKDIR /app
+
+# Install necessary system libraries and clean up
+RUN apt-get update && \
+    apt-get install -y --no-install-recommends ca-certificates && \
+    rm -rf /var/lib/apt/lists/*
+
+# Verify and copy the compiled binary
+COPY --from=builder /app/svc-engine/target/release/svc-engine /usr/local/bin/svc-engine
+RUN ls -la /usr/local/bin/svc-engine && \
+    chmod +x /usr/local/bin/svc-engine
+
+# Expose the port (8080 from our main.rs)
+EXPOSE 8080
+
+# Run the binary from PATH
+CMD ["svc-engine"]

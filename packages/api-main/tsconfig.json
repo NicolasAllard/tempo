@@ -1,0 +1,35 @@
+{
+  "compilerOptions": {
+    "target": "ES2022",
+    "module": "NodeNext",
+    "moduleResolution": "NodeNext",
+    // Allow using ESM-style imports even when package.json doesn't set "type": "module".
+    // This avoids the TS1295 error while keeping Node-style resolution.
+    "verbatimModuleSyntax": false,
+
+    // Interop / convenience
+    "esModuleInterop": true,
+    "allowSyntheticDefaultImports": true,
+
+    // Strictness
+    "strict": true,
+    "noUncheckedIndexedAccess": true,
+    "exactOptionalPropertyTypes": true,
+
+    // Output / emit
+    "rootDir": "src",
+    "outDir": "dist",
+    "declaration": true,
+    "declarationMap": true,
+    "sourceMap": true,
+
+    // Type checking helpers
+    "skipLibCheck": true,
+    "forceConsistentCasingInFileNames": true,
+
+    // Runtime types
+    "types": ["node"]
+  },
+  "include": ["src"],
+  "exclude": ["node_modules", "dist"]
+}
