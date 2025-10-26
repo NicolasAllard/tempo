@@ -1,5 +1,8 @@
 import fastify from "fastify";
 import cors from "@fastify/cors";
+import jwt from "@fastify/jwt";
+import { authRoutes } from "./routes/auth";
+import { boardRoutes } from "./routes/board";
 
 const server = fastify({ logger: true });
 
@@ -8,10 +11,22 @@ server.register(cors, {
   origin: "http://localhost:5173",
 });
 
+server.register(jwt, {
+  secret: "your-secret-key",
+});
+
 // Phase 0: Health check
 server.get("/health", async (request, reply) => {
   return { hello: "world" };
 });
+
+// Public routes (no auth required)
+// Mount auth routes under /auth -> /auth/register, /auth/login
+server.register(authRoutes, { prefix: "/auth" });
+
+// Protected routes (require authentication)
+// Mount board routes under /boards so they don't shadow other endpoints
+server.register(boardRoutes, { prefix: "/boards" });
 
 const start = async () => {
   try {

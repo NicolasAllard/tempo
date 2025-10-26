@@ -9,7 +9,7 @@ async fn main() {
     // Build our application with a single /health route
     let app = Router::new().route("/health", get(health_check));
 
-    println!("Rust 'Engine' service starting on http://0.0.0.0:8081");
+    println!("Rust 'Brain' service starting on http://0.0.0.0:8081");
 
     // Bind to the port
     let listener = tokio::net::TcpListener::bind("0.0.0.0:8081")

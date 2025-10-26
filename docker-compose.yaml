@@ -4,13 +4,13 @@ services:
   # Frontend (React + Vite)
   frontend:
     build:
-      context: ./packages/frontend
-      dockerfile: Dockerfile
+      context: .
+      dockerfile: ./packages/frontend/Dockerfile
     ports:
       - "5173:5173" # Vite dev server
     volumes:
-      - ./packages/frontend:/app
-      - /app/node_modules # Isolate node_modules
+      - ./packages/frontend/src:/app/packages/frontend/src
+      - ./packages/frontend/public:/app/packages/frontend/public
     networks:
       - tempo_net
 
@@ -28,7 +28,8 @@ services:
       - DATABASE_URL=postgresql://user:password@db:5432/tempo
       - SVC_BRAIN_URL=http://svc-brain:8081
     depends_on:
-      - db
+      db:
+        condition: service_healthy
     networks:
       - tempo_net
 
@@ -65,6 +66,11 @@ services:
       - postgres_data:/var/lib/postgresql/data
     networks:
       - tempo_net
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U user -d tempo"]
+      interval: 5s
+      timeout: 5s
+      retries: 5
 
 networks:
   tempo_net:

@@ -79,7 +79,7 @@
           "options": { "raw": { "language": "json" } }
         },
         "url": {
-          "raw": "{{api_main_host}}/register",
+          "raw": "{{api_main_host}}/auth/register",
           "host": ["{{api_main_host}}"],
           "path": ["register"]
         }
@@ -101,7 +101,7 @@
           "options": { "raw": { "language": "json" } }
         },
         "url": {
-          "raw": "{{api_main_host}}/login",
+          "raw": "{{api_main_host}}/auth/login",
           "host": ["{{api_main_host}}"],
           "path": ["login"]
         }
