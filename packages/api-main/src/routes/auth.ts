@@ -8,14 +8,19 @@ interface IAuthBody {
   password: string;
 }
 
+type RegisterBody = IAuthBody & {
+  firstName: string;
+  lastName: string;
+};
+
 export async function authRoutes(server: FastifyInstance) {
   server.post(
     "/register",
     async (
-      request: FastifyRequest<{ Body: IAuthBody }>,
+      request: FastifyRequest<{ Body: RegisterBody }>,
       reply: FastifyReply
     ) => {
-      const { email, password } = request.body;
+      const { firstName, lastName, email, password } = request.body;
 
       try {
         // Check if user already exists
@@ -31,6 +36,8 @@ export async function authRoutes(server: FastifyInstance) {
         // Create the new user
         const user = await prisma.user.create({
           data: {
+            firstName,
+            lastName,
             email,
             passwordHash,
           },

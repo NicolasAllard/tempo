@@ -15,7 +15,7 @@ export async function boardRoutes(server: FastifyInstance) {
   // No one can access these routes without a valid JWT token.
   server.addHook("onRequest", authHook);
 
-  // 1. CREATE A NEW BOARD
+  // CREATE A NEW BOARD
   server.post(
     "/",
     async (
@@ -41,7 +41,7 @@ export async function boardRoutes(server: FastifyInstance) {
     }
   );
 
-  // 2. GET ALL BOARDS FOR THE LOGGED-IN USER
+  // GET ALL BOARDS FOR THE LOGGED-IN USER
   server.get("/", async (request: FastifyRequest, reply: FastifyReply) => {
     try {
       const user = request.user as IAuthdUser;
@@ -56,7 +56,7 @@ export async function boardRoutes(server: FastifyInstance) {
     }
   });
 
-  // 3. GET A SINGLE BOARD BY ID
+  // GET A SINGLE BOARD BY ID
   server.get(
     "/:id",
     async (
@@ -84,7 +84,7 @@ export async function boardRoutes(server: FastifyInstance) {
     }
   );
 
-  // 4. SAVE (UPDATE) A BOARD'S DATA
+  // SAVE (UPDATE) A BOARD'S DATA
   server.put(
     "/:id/save",
     async (
@@ -124,7 +124,7 @@ export async function boardRoutes(server: FastifyInstance) {
     }
   );
 
-  // 5. DELETE A BOARD
+  // DELETE A BOARD
   server.delete(
     "/:id",
     async (
