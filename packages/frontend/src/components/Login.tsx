@@ -18,8 +18,6 @@ export function Login() {
   const [isLoading, setIsLoading] = useState<boolean>(false);
   const user = useAuth();
 
-  console.log(user);
-
   const navigate = useNavigate();
 
   const login = async (props: LoginBody) => {
@@ -35,7 +33,6 @@ export function Login() {
       user.setUser(response.user);
       navigate("/dashboard");
     }
-    console.log(response);
     setIsLoading(false);
   };
 
