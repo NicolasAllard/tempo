@@ -84,7 +84,12 @@ export async function authRoutes(server: FastifyInstance) {
           email: user.email,
         });
 
-        return reply.send({ token });
+        return reply.send({
+          token,
+          email: user.email,
+          firstName: user.firstName,
+          lastName: user.lastName,
+        });
       } catch (error) {
         console.error(error);
         return reply.status(500).send({ message: "Internal server error" });
