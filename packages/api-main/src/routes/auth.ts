@@ -79,10 +79,13 @@ export async function authRoutes(server: FastifyInstance) {
 
         // User is valid, create a JWT token
         // The 'user' object from the DB is added to the token payload
-        const token = server.jwt.sign({
-          id: user.id,
-          email: user.email,
-        });
+        const token = server.jwt.sign(
+          {
+            id: user.id,
+            email: user.email,
+          },
+          { expiresIn: "1h" }
+        );
 
         return reply.send({
           token,

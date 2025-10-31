@@ -7,16 +7,15 @@ import {
   TextField,
   Button,
   Alert,
+  Link,
 } from "@mui/material";
 import { useState } from "react";
 import { useNavigate } from "react-router";
 import { loginAccount, type LoginBody } from "../api/auth";
-import { useAuth } from "../hooks/useAuth";
 
 export function Login() {
   const [error, setError] = useState<string>("");
   const [isLoading, setIsLoading] = useState<boolean>(false);
-  const user = useAuth();
 
   const navigate = useNavigate();
 
@@ -30,7 +29,8 @@ export function Login() {
         setError("An unexpected error occured");
         return;
       }
-      user.setUser(response.user);
+
+      sessionStorage.setItem("user", JSON.stringify(response.user));
       navigate("/dashboard");
     }
     setIsLoading(false);
@@ -60,7 +60,7 @@ export function Login() {
         <CardHeader
           title={
             <Typography variant="h5" align="center">
-              Register
+              Login
             </Typography>
           }
           sx={{ mb: 2 }}
@@ -82,6 +82,9 @@ export function Login() {
                 fullWidth
                 required
               />
+              <Link variant="caption" href="/auth/register">
+                Don't have an account?
+              </Link>
               {error && <Alert color="error">{error}</Alert>}
               <Button
                 type="submit"

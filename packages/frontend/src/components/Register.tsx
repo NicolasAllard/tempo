@@ -7,6 +7,7 @@ import {
   TextField,
   Button,
   Alert,
+  Link,
 } from "@mui/material";
 import { useState } from "react";
 import { useNavigate } from "react-router";
@@ -102,6 +103,9 @@ export function Register() {
                 fullWidth
                 required
               />
+              <Link variant="caption" href="/auth/login">
+                Already signed up?
+              </Link>
               {error && <Alert color="error">{error}</Alert>}
               <Button
                 type="submit"
